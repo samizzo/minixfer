@@ -1,0 +1,7 @@
+**/.vs/*
+**/dos/*
+**/win/*
+**/debug/*
+
+*.vtcache
+*.user
