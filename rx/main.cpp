@@ -208,6 +208,24 @@ int main()
                     break;
                 }
             }
+
+            int progress = (totalBytesReceived*10) / file.size;
+            printf("\r[");
+            for (int j = 0; j < 10; j++)
+            {
+                if (j < progress)
+                {
+                    printf("%c", 178);
+                }
+                else
+                {
+                    printf("%c", '-');
+                }
+            }
+            printf("]");
+
+            if (!readingFile)
+                printf("\n");
         }
         else
         {

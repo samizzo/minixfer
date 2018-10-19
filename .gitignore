@@ -2,6 +2,7 @@
 **/dos/*
 **/win/*
 **/debug/*
+**/release/*
 
 *.vtcache
 *.user
