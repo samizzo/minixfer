@@ -20,11 +20,9 @@ struct File
 
 const int ListenPort = 2000;
 const uint16_t RCV_BUF_SIZE = 8192;
-const int WRITE_BUF_SIZE = 8192;
-const int READ_BUF_SIZE  = 8192;
-int CtrlBreakDetected = 0;
-TcpSocket *mySocket = 0;
-
+const int BUFFER_SIZE = 8192;
+int ctrlBreakDetected = 0;
+TcpSocket *socket = 0;
 struct File file;
 
 char escape_pressed()
@@ -40,26 +38,25 @@ char escape_pressed()
     return keypress == 1;
 }
 
-void ( __interrupt __far *oldCtrlBreakHandler)( );
+void (__interrupt __far* oldCtrlBreakHandler)();
+void (__interrupt __far* oldCtrlCHandler)();
 
-void __interrupt __far ctrlBreakHandler( ) {
-  CtrlBreakDetected = 1;
-}
-
-void __interrupt __far ctrlCHandler( ) {
-  // Do Nothing
+void __interrupt __far ctrlBreakHandler()
+{
+    ctrlBreakDetected = 1;
 }
 
 void shutdown()
 {
-    if (mySocket)
+    if (socket)
     {
-        mySocket->close();
-        TcpSocketMgr::freeSocket(mySocket);
+        socket->close();
+        TcpSocketMgr::freeSocket(socket);
     }
 
-    setvect( 0x1b, oldCtrlBreakHandler);
-    Utils::endStack( );
+    setvect(0x1b, oldCtrlBreakHandler);
+    setvect(0x23, oldCtrlCHandler);
+    Utils::endStack();
 
     exit(1);
 }
@@ -70,7 +67,7 @@ int read_blocking(TcpSocket* socket, void* buffer, uint32_t size)
     uint32_t numread = 0;
     while (numread != size)
     {
-        if (CtrlBreakDetected || escape_pressed())
+        if (ctrlBreakDetected || escape_pressed() || socket->isRemoteClosed())
             return 0;
 
         PACKET_PROCESS_SINGLE;
@@ -79,7 +76,7 @@ int read_blocking(TcpSocket* socket, void* buffer, uint32_t size)
 
         while (1)
         {
-            int16_t recvRc = mySocket->recv((uint8_t*)(buffer)+numread, (uint16_t)(size - numread));
+            int16_t recvRc = socket->recv((uint8_t*)(buffer)+numread, (uint16_t)(size - numread));
             if (recvRc > 0)
             {
                 numread += recvRc;
@@ -100,75 +97,70 @@ int main()
 {
     if (Utils::parseEnv() != 0)
     {
-        printf("failed to parse mtcp config\n");
+        printf("error: failed to parse mtcp config\n");
         exit(1);
     }
 
     if (Utils::initStack(2, TCP_SOCKET_RING_SIZE))
     {
-        printf("failed to init\n");
+        printf("error: failed to init\n");
         exit(1);
     }
 
-    // Save off the oldCtrlBreakHander and put our own in.  Shutdown( ) will
-    // restore the original handler for us.
-    oldCtrlBreakHandler = getvect( 0x1b );
-    setvect( 0x1b, ctrlBreakHandler);
+    oldCtrlBreakHandler = getvect(0x1b);
+    oldCtrlCHandler = getvect(0x23);
+    setvect(0x1b, ctrlBreakHandler);
+    setvect(0x23, ctrlBreakHandler);
 
-    // Get the Ctrl-C interrupt too, but do nothing.  We actually want Ctrl-C
-    // to be a legal character to send when in interactive mode.
-    setvect( 0x23, ctrlCHandler);
-
-    TcpSocket *listeningSocket = TcpSocketMgr::getSocket();
+    TcpSocket* listeningSocket = TcpSocketMgr::getSocket();
     listeningSocket->listen(ListenPort, RCV_BUF_SIZE);
 
-    uint8_t *fileWriteBuffer = (uint8_t *)malloc( WRITE_BUF_SIZE );
+    uint8_t* fileWriteBuffer = (uint8_t*)malloc(BUFFER_SIZE);
 
-    printf("Waiting for connection..\n");
-    int rc = 0;
+    printf("waiting for connection..\n");
+    int aborted = 0;
     while (1)
     {
-        if (CtrlBreakDetected )
+        if (ctrlBreakDetected)
         {
-            rc = -1;
+            aborted = 1;
             break;
         }
 
         PACKET_PROCESS_SINGLE;
         Arp::driveArp();
-        Tcp::drivePackets( );
+        Tcp::drivePackets();
 
-        mySocket = TcpSocketMgr::accept();
-        if (mySocket != NULL)
+        socket = TcpSocketMgr::accept();
+        if (socket != NULL)
         {
+            // Client connected.
             listeningSocket->close();
             TcpSocketMgr::freeSocket(listeningSocket);
-            rc = 0;
             break;
         }
 
         if (escape_pressed())
         {
-            rc = -1;
+            aborted = 1;
             break;
         }
     }
 
-    if (rc != 0)
+    if (aborted != 0)
         shutdown();
 
-    printf("Client connected\n");
+    printf("client connected..\n");
 
-    int maxPacketSize = MyMTU - (sizeof(IpHeader) + sizeof(TcpHeader));
     uint16_t bytesRead = 0;
-    uint16_t bytesToRead = WRITE_BUF_SIZE; // Bytes to read from socket
+    uint16_t bytesToRead = BUFFER_SIZE;
     uint32_t totalBytesReceived = 0;
     char readingFile = 0;
     FILE* fp = 0;
 
     while (1)
     {
-        if (CtrlBreakDetected || escape_pressed())
+        if (ctrlBreakDetected || escape_pressed())
             break;
 
         PACKET_PROCESS_SINGLE;
@@ -179,17 +171,17 @@ int main()
         {
             while (1)
             {
-                if (CtrlBreakDetected || escape_pressed())
+                if (ctrlBreakDetected || escape_pressed())
                     break;
 
                 uint32_t fileBytesRemaining = file.size - totalBytesReceived;
                 uint16_t actualBytesToRead = fileBytesRemaining < bytesToRead ? fileBytesRemaining : bytesToRead;
-                int16_t recvRc = mySocket->recv(fileWriteBuffer+bytesRead, actualBytesToRead);
+                int16_t recvRc = socket->recv(fileWriteBuffer + bytesRead, actualBytesToRead);
 
                 if (recvRc > 0)
                 {
                     // Write new bytes to the file.
-                    fwrite(fileWriteBuffer+bytesRead, 1, recvRc, fp);
+                    fwrite(fileWriteBuffer + bytesRead, 1, recvRc, fp);
 
                     totalBytesReceived += recvRc;
                     bytesRead += recvRc;
@@ -197,7 +189,6 @@ int main()
 
                     if (totalBytesReceived == file.size)
                     {
-                        printf("Finished reading file\n");
                         fflush(fp);
                         fclose(fp);
                         readingFile = 0;
@@ -207,31 +198,34 @@ int main()
                     if (bytesToRead == 0)
                     {
                         // Keep reading from the start of the buffer again.
-                        bytesToRead = WRITE_BUF_SIZE;
+                        bytesToRead = BUFFER_SIZE;
                         bytesRead = 0;
                     }
                 }
                 else
                 {
-                    // No data or an error - break this local receive loop
+                    // No data or error.
                     break;
                 }
             }
         }
         else
         {
-            if (!read_blocking(mySocket, &file, sizeof(file)))
+            // Wait for a file to be sent.
+            if (!read_blocking(socket, &file, sizeof(file)))
                 break;
-            printf("Reading file %s, %lu bytes\n", file.name, (unsigned long)file.size);
-            bytesToRead = WRITE_BUF_SIZE;
+
+            printf("receiving %s, %lu bytes\n", file.name, (unsigned long)file.size);
+            bytesToRead = BUFFER_SIZE;
+            totalBytesReceived = 0;
             bytesRead = 0;
             readingFile = 1;
             fp = fopen(file.name, "wb");
         }
 
-        if (mySocket->isRemoteClosed())
+        if (socket->isRemoteClosed())
         {
-            printf("Remote closed connection\n");
+            printf("remote closed connection\n");
             break;
         }
     }
