@@ -24,6 +24,7 @@ const int BUFFER_SIZE = 8192;
 int ctrlBreakDetected = 0;
 TcpSocket *socket = 0;
 struct File file;
+int doNewline = 0;
 
 char escape_pressed()
 {
@@ -58,6 +59,8 @@ void shutdown()
     setvect(0x23, oldCtrlCHandler);
     Utils::endStack();
 
+    if (doNewline)
+        printf("            ");
     exit(1);
 }
 
@@ -210,7 +213,7 @@ int main()
             }
 
             int progress = (totalBytesReceived*10) / file.size;
-            printf("\r[");
+            printf("[");
             for (int j = 0; j < 10; j++)
             {
                 if (j < progress)
@@ -222,10 +225,9 @@ int main()
                     printf("%c", '-');
                 }
             }
-            printf("]");
-
-            if (!readingFile)
-                printf("\n");
+            printf("]\r");
+            fflush(stdout);
+            doNewline = 1;
         }
         else
         {

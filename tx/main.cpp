@@ -75,7 +75,7 @@ int main(int argc, char** argv)
         FILE* fp = fopen(file.name, "rb");
         if (fp == 0)
         {
-            printf("error: couldn't open '%s'\n", file.name);
+            printf("\rerror: couldn't open '%s'\n", file.name);
             continue;
         }
 
@@ -85,7 +85,7 @@ int main(int argc, char** argv)
 
         send(client, (char*)&file, sizeof(file), 0);
 
-        printf("sending %s, %i bytes\n", file.name, file.size);
+        printf("\rsending %s, %i bytes\n", file.name, file.size);
 
         // Send file contents.
         char buffer[8192];
@@ -115,7 +115,6 @@ int main(int argc, char** argv)
             else
             {
                 Sleep(500);
-                printf("\n");
                 break;
             }
         }
@@ -124,5 +123,6 @@ int main(int argc, char** argv)
     closesocket(client);
     WSACleanup();
 
+    printf("\r            ");
     return 0;
 }
