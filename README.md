@@ -11,3 +11,10 @@ has stubs for building for Windows but this is not implemented.
 
 'tx' was built using Visual Studio 2017. There is a makefile for building
 under MS-DOS but this is not implemented.
+
+Usage
+-----
+
+On the receiving machine, run rx.exe. On the sending machine, run:
+
+tx.exe <ip address> <filename1> <filename2> ... <filenameN>
