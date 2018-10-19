@@ -33,21 +33,20 @@ EXE_NAME = rx.exe
 CPP = wpp
 
 INCLUDE_DOS = -I=TCPINC -I=TCPLIB
-INCLUDE_WIN = -I=PICOTCP
+INCLUDE_WIN =
 INCLUDE = $(INCLUDE_$(PLATFORM))
 
 CFLAGS_DOS = -bt=dos -mc -DCFG_H="rx.cfg"
 CFLAGS_WIN = -bt=nt
 CFLAGS_PLATFORM = $(CFLAGS_$(PLATFORM))
 CFLAGS_RELEASE = -d$(P) $(CFLAGS_PLATFORM) $(INCLUDE) -oxtl+ -s
-#-oh -ok -ot -s -oa -ei -zp2 -zpw -we -ob -ol+ -oi+
 CFLAGS_DEBUG  = -d$(P) $(CFLAGS_PLATFORM) $(INCLUDE) -dDEBUG -we -0
 CFLAGS = $(CFLAGS_$(BUILD))
 
 CPPFLAGS = $(CPPFLAGS_$(BUILD))
 
 LINK_FLAGS_DOS = system dos
-LINK_FLAGS_WIN = system nt libpath PICOTCP libfile PICOTCPL.LIB
+LINK_FLAGS_WIN = system nt
 LINK_FLAGS_DEBUG = debug all
 LINK_FLAGS_RELEASE =
 LINK_FLAGS = $(LINK_FLAGS_$(BUILD))
