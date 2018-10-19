@@ -35,7 +35,7 @@ int main(int argc, char** argv)
     {
         if (strlen(argv[i+2]) > 12)
         {
-            printf("filename '%s' is too long. filename should be in 8.3 format\n", argv[i]);
+            printf("error: filename '%s' is too long. filename should be in 8.3 format\n", argv[i]);
             haserrors = 1;
         }
     }
@@ -46,14 +46,14 @@ int main(int argc, char** argv)
     result = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (result != NO_ERROR)
     {
-        printf("WSAStartup() failed (%d)", result);
+        printf("error: WSAStartup() failed (%d)", result);
         return 1;
     }
 
     client = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (client == INVALID_SOCKET)
     {
-        printf("socket() failed\n");
+        printf("error: socket() failed\n");
         return 1;
     }
 
@@ -63,29 +63,50 @@ int main(int argc, char** argv)
     connectresult = connect(client, (SOCKADDR*)&address, sizeof(address));
     if (connectresult == SOCKET_ERROR)
     {
-        printf("connect() failed\n");
+        printf("error: connect() failed\n");
         return 1;
     }
 
-    printf("tx connected..\n");
+    printf("connected..\n");
     for (int i = 0; i < numfiles; i++)
     {
         struct File file;
         sprintf(file.name, "%s", argv[i+2]);
         FILE* fp = fopen(file.name, "rb");
+        if (fp == 0)
+        {
+            printf("error: couldn't open '%s'\n", file.name);
+            continue;
+        }
+
         fseek(fp, 0, SEEK_END);
         file.size = ftell(fp);
         fseek(fp, 0, SEEK_SET);
 
         send(client, (char*)&file, sizeof(file), 0);
 
+        printf("sending %s, %i bytes\n", file.name, file.size);
+
         // Send file contents.
         char buffer[8192];
         while (1)
         {
             long pos = ftell(fp);
-            int progress = (pos*100) / file.size;
-            printf("\r%s, %i bytes - %i%%", file.name, file.size, progress);
+            int progress = (pos*10) / file.size;
+            printf("\r[");
+            for (int j = 0; j < 10; j++)
+            {
+                if (j < progress)
+                {
+                    printf("%c", 178);
+                }
+                else
+                {
+                    printf("%c", '-');
+                }
+            }
+            printf("]");
+
             int numread = fread(buffer, 1, sizeof(buffer), fp);
             if (numread > 0)
             {
@@ -93,16 +114,14 @@ int main(int argc, char** argv)
             }
             else
             {
-                Sleep(1000);
+                Sleep(500);
                 printf("\n");
                 break;
             }
         }
     }
 
-    Sleep(1000);
     closesocket(client);
-
     WSACleanup();
 
     return 0;
