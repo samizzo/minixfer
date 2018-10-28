@@ -33,7 +33,8 @@ int main(int argc, char** argv)
     int numfiles = argc - 2;
     for (int i = 0; i < numfiles; i++)
     {
-        if (strlen(argv[i+2]) > 12)
+        char* filename = strrchr(argv[i+2], '\\')+1;
+        if (strlen(filename) > 12)
         {
             printf("error: filename '%s' is too long. filename should be in 8.3 format\n", argv[i]);
             haserrors = 1;
@@ -71,8 +72,9 @@ int main(int argc, char** argv)
     for (int i = 0; i < numfiles; i++)
     {
         struct File file;
-        sprintf(file.name, "%s", argv[i+2]);
-        FILE* fp = fopen(file.name, "rb");
+        char* filename = strrchr(argv[i + 2], '\\')+1;
+        sprintf(file.name, "%s", filename);
+        FILE* fp = fopen(argv[i + 2], "rb");
         if (fp == 0)
         {
             printf("\rerror: couldn't open '%s'\n", file.name);
