@@ -13,6 +13,22 @@ struct File
     char unused[15];
 };
 
+// Returns just the filename without any path information.
+static char* getFilename(char* path)
+{
+    char* filename = strrchr(path, '\\');
+    if (filename)
+    {
+        filename++;
+    }
+    else
+    {
+        filename = path;
+    }
+
+    return filename;
+}
+
 int main(int argc, char** argv)
 {
     SOCKET client;
@@ -33,7 +49,7 @@ int main(int argc, char** argv)
     int numfiles = argc - 2;
     for (int i = 0; i < numfiles; i++)
     {
-        char* filename = strrchr(argv[i+2], '\\')+1;
+        char* filename = getFilename(argv[i + 2]);
         if (strlen(filename) > 12)
         {
             printf("error: filename '%s' is too long. filename should be in 8.3 format\n", argv[i]);
@@ -72,7 +88,7 @@ int main(int argc, char** argv)
     for (int i = 0; i < numfiles; i++)
     {
         struct File file;
-        char* filename = strrchr(argv[i + 2], '\\')+1;
+        char* filename = getFilename(argv[i + 2]);
         sprintf(file.name, "%s", filename);
         FILE* fp = fopen(argv[i + 2], "rb");
         if (fp == 0)
