@@ -17,4 +17,4 @@ Usage
 
 On the receiving machine, run rx.exe. On the sending machine, run:
 
-tx.exe <ip address> <filename1> <filename2> ... <filenameN>
+tx.exe &lt;ip address&gt; &lt;filename1&gt; &lt;filename2&gt; ... &lt;filenameN&gt;
