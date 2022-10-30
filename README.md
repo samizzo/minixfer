@@ -15,6 +15,6 @@ under MS-DOS but this is not implemented.
 Usage
 -----
 
-On the receiving machine, run rx.exe. On the sending machine, run:
+On the receiving machine, run `rx.exe`. On the sending machine, run:
 
-tx.exe <ip address> <filename1> <filename2> ... <filenameN>
+`tx.exe <ip address> <filename1> <filename2> ... <filenameN>`
