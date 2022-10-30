@@ -113,7 +113,7 @@ extern uint8_t getFileAttributes( char far * name, uint16_t *attrs );
   "int 21h"                     \
   "lahf"                        \
   "and ah, 1h"                  \
-  "mov es:bx, cx"               \
+  "mov es:[bx], cx"             \
   parm [ds dx] [es bx]          \
   value [ah];
 

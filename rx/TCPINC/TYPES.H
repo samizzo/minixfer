@@ -37,7 +37,7 @@
 #define _TYPES_H
 
 
-#ifdef __TURBOC__
+#if defined(__TURBOC__) || __WATCOMC__ <= 1100
 
 // Typedefs for common data types.  These make it very easy to see
 // if a datatype is signed or unsigned and how big it is at a glance.
