@@ -22,6 +22,7 @@ const int ListenPort = 2000;
 const uint16_t RCV_BUF_SIZE = 8192;
 const int BUFFER_SIZE = 8192;
 int ctrlBreakDetected = 0;
+int aborted = 0;
 TcpSocket *socket = 0;
 struct File file;
 int doNewline = 0;
@@ -47,7 +48,7 @@ void __interrupt __far ctrlBreakHandler()
     ctrlBreakDetected = 1;
 }
 
-void shutdown()
+void shutdown(int aborted)
 {
     if (socket)
     {
@@ -61,7 +62,7 @@ void shutdown()
 
     if (doNewline)
         printf("            ");
-    exit(1);
+    exit(aborted);
 }
 
 // Blocking read. Returns 1 on success, 0 on failure.
@@ -151,7 +152,7 @@ int main()
     }
 
     if (aborted != 0)
-        shutdown();
+        shutdown(aborted);
 
     printf("client connected..\n");
 
@@ -164,7 +165,10 @@ int main()
     while (1)
     {
         if (ctrlBreakDetected || escape_pressed())
+        {
+            aborted = 1;
             break;
+        }
 
         PACKET_PROCESS_SINGLE;
         Arp::driveArp();
@@ -250,6 +254,6 @@ int main()
         }
     }
 
-    shutdown();
+    shutdown(0);
     return 0;
 }
