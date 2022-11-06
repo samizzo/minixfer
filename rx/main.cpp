@@ -61,7 +61,7 @@ void shutdown(int aborted)
     Utils::endStack();
 
     if (doNewline)
-        printf("            ");
+        printf("            \n");
     exit(aborted);
 }
 
