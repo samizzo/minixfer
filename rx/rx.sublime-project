@@ -10,24 +10,24 @@
 	[
 		{
 			"working_dir": "${project_path}",
-			"path": "D:\\DEV\\WATCOM\\BINNT;%PATH%",
+			"path": "D:\\DEV\\WATCOM\\WATCOM11\\BINNT;%PATH%",
 			"env":
 			{
-				"WATCOM": "D:\\DEV\\WATCOM",
-				"EDPATH": "D:\\DEV\\WATCOM\\EDDAT",
-				"INCLUDE": "D:\\DEV\\WATCOM\\H;D:\\DEV\\WATCOM\\H\\NT"
+				"WATCOM": "D:\\DEV\\WATCOM\\WATCOM11",
+				"EDPATH": "D:\\DEV\\WATCOM\\WATCOM11\\EDDAT",
+				"INCLUDE": "D:\\DEV\\WATCOM\\WATCOM11\\H;D:\\DEV\\WATCOM\\WATCOM11\\H\\NT"
 			},
 			"name": "Clean Win Debug",
 			"cmd": [ "wmake", "BUILD=DEBUG", "PLATFORM=WIN", "clean" ]
 		},
 		{
 			"working_dir": "${project_path}",
-			"path": "D:\\DEV\\WATCOM\\BINNT;%PATH%",
+			"path": "D:\\DEV\\WATCOM\\WATCOM11\\BINNT;%PATH%",
 			"env":
 			{
-				"WATCOM": "D:\\DEV\\WATCOM",
-				"EDPATH": "D:\\DEV\\WATCOM\\EDDAT",
-				"INCLUDE": "D:\\DEV\\WATCOM\\H;D:\\DEV\\WATCOM\\H\\NT"
+				"WATCOM": "D:\\DEV\\WATCOM\\WATCOM11",
+				"EDPATH": "D:\\DEV\\WATCOM\\WATCOM11\\EDDAT",
+				"INCLUDE": "D:\\DEV\\WATCOM\\WATCOM11\\H;D:\\DEV\\WATCOM\\WATCOM11\\H\\NT"
 			},
 			"name": "Build Win Debug",
 			"cmd": [ "wmake", "-e", "BUILD=DEBUG", "PLATFORM=WIN", "all" ]
@@ -39,72 +39,72 @@
 		},
 		{
 			"working_dir": "${project_path}",
-			"path": "D:\\DEV\\WATCOM\\BINNT;%PATH%",
+			"path": "D:\\DEV\\WATCOM\\WATCOM11\\BINNT;%PATH%",
 			"env":
 			{
-				"WATCOM": "D:\\DEV\\WATCOM",
-				"EDPATH": "D:\\DEV\\WATCOM\\EDDAT",
-				"INCLUDE": "D:\\DEV\\WATCOM\\H;D:\\DEV\\WATCOM\\H\\NT"
+				"WATCOM": "D:\\DEV\\WATCOM\\WATCOM11",
+				"EDPATH": "D:\\DEV\\WATCOM\\WATCOM11\\EDDAT",
+				"INCLUDE": "D:\\DEV\\WATCOM\\WATCOM11\\H;D:\\DEV\\WATCOM\\WATCOM11\\H\\NT"
 			},
 			"name": "Clean Win Release",
 			"cmd": [ "wmake", "BUILD=RELEASE", "PLATFORM=WIN", "clean" ]
 		},
 		{
 			"working_dir": "${project_path}",
-			"path": "D:\\DEV\\WATCOM\\BINNT;%PATH%",
+			"path": "D:\\DEV\\WATCOM\\WATCOM11\\BINNT;%PATH%",
 			"env":
 			{
-				"WATCOM": "D:\\DEV\\WATCOM",
-				"EDPATH": "D:\\DEV\\WATCOM\\EDDAT",
-				"INCLUDE": "D:\\DEV\\WATCOM\\H;D:\\DEV\\WATCOM\\H\\NT"
+				"WATCOM": "D:\\DEV\\WATCOM\\WATCOM11",
+				"EDPATH": "D:\\DEV\\WATCOM\\WATCOM11\\EDDAT",
+				"INCLUDE": "D:\\DEV\\WATCOM\\WATCOM11\\H;D:\\DEV\\WATCOM\\WATCOM11\\H\\NT"
 			},
 			"name": "Build Win Release",
 			"cmd": [ "wmake", "-e", "BUILD=RELEASE", "PLATFORM=WIN", "all" ]
 		},
 		{
 			"working_dir": "${project_path}",
-			"path": "D:\\DEV\\WATCOM\\BINNT;%PATH%",
+			"path": "D:\\DEV\\WATCOM\\WATCOM11\\BINNT;%PATH%",
 			"env":
 			{
-				"WATCOM": "D:\\DEV\\WATCOM",
-				"EDPATH": "D:\\DEV\\WATCOM\\EDDAT",
-				"INCLUDE": "D:\\DEV\\WATCOM\\H;D:\\DEV\\WATCOM\\H\\NT"
+				"WATCOM": "D:\\DEV\\WATCOM\\WATCOM11",
+				"EDPATH": "D:\\DEV\\WATCOM\\WATCOM11\\EDDAT",
+				"INCLUDE": "D:\\DEV\\WATCOM\\WATCOM11\\H;D:\\DEV\\WATCOM\\WATCOM11\\H\\NT"
 			},
 			"name": "Clean DOS Debug",
 			"cmd": [ "wmake", "-e", "BUILD=DEBUG", "PLATFORM=DOS", "clean" ]
 		},
 		{
 			"working_dir": "${project_path}",
-			"path": "D:\\DEV\\WATCOM\\BINNT;%PATH%",
+			"path": "D:\\DEV\\WATCOM\\WATCOM11\\BINNT;%PATH%",
 			"env":
 			{
-				"WATCOM": "D:\\DEV\\WATCOM",
-				"EDPATH": "D:\\DEV\\WATCOM\\EDDAT",
-				"INCLUDE": "D:\\DEV\\WATCOM\\H;D:\\DEV\\WATCOM\\H\\NT"
+				"WATCOM": "D:\\DEV\\WATCOM\\WATCOM11",
+				"EDPATH": "D:\\DEV\\WATCOM\\WATCOM11\\EDDAT",
+				"INCLUDE": "D:\\DEV\\WATCOM\\WATCOM11\\H;D:\\DEV\\WATCOM\\WATCOM11\\H\\NT"
 			},
 			"name": "Build DOS Debug",
 			"cmd": [ "wmake", "-e", "BUILD=DEBUG", "PLATFORM=DOS", "all" ]
 		},
 		{
 			"working_dir": "${project_path}",
-			"path": "D:\\DEV\\WATCOM\\BINNT;%PATH%",
+			"path": "D:\\DEV\\WATCOM\\WATCOM11\\BINNT;%PATH%",
 			"env":
 			{
-				"WATCOM": "D:\\DEV\\WATCOM",
-				"EDPATH": "D:\\DEV\\WATCOM\\EDDAT",
-				"INCLUDE": "D:\\DEV\\WATCOM\\H;D:\\DEV\\WATCOM\\H\\NT"
+				"WATCOM": "D:\\DEV\\WATCOM\\WATCOM11",
+				"EDPATH": "D:\\DEV\\WATCOM\\WATCOM11\\EDDAT",
+				"INCLUDE": "D:\\DEV\\WATCOM\\WATCOM11\\H;D:\\DEV\\WATCOM\\WATCOM11\\H\\NT"
 			},
 			"name": "Clean DOS Release",
 			"cmd": [ "wmake", "-e", "BUILD=RELEASE", "PLATFORM=DOS", "clean" ]
 		},
 		{
 			"working_dir": "${project_path}",
-			"path": "D:\\DEV\\WATCOM\\BINNT;%PATH%",
+			"path": "D:\\DEV\\WATCOM\\WATCOM11\\BINNT;%PATH%",
 			"env":
 			{
-				"WATCOM": "D:\\DEV\\WATCOM",
-				"EDPATH": "D:\\DEV\\WATCOM\\EDDAT",
-				"INCLUDE": "D:\\DEV\\WATCOM\\H;D:\\DEV\\WATCOM\\H\\NT"
+				"WATCOM": "D:\\DEV\\WATCOM\\WATCOM11",
+				"EDPATH": "D:\\DEV\\WATCOM\\WATCOM11\\EDDAT",
+				"INCLUDE": "D:\\DEV\\WATCOM\\WATCOM11\\H;D:\\DEV\\WATCOM\\WATCOM11\\H\\NT"
 			},
 			"name": "Build DOS Release",
 			"cmd": [ "wmake", "-e", "BUILD=RELEASE", "PLATFORM=DOS", "all" ]
