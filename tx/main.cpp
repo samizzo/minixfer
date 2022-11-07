@@ -52,7 +52,7 @@ int main(int argc, char** argv)
         char* filename = getFilename(argv[i + 2]);
         if (strlen(filename) > 12)
         {
-            printf("error: filename '%s' is too long. filename should be in 8.3 format\n", argv[i]);
+            printf("error: filename '%s' is too long (%i chars). filename should be in 8.3 format\n", argv[i+2], strlen(filename));
             haserrors = 1;
         }
     }
